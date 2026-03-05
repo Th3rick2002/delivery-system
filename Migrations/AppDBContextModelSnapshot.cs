@@ -103,6 +103,23 @@ namespace ParcelDeliverySystem.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            RoleName = "SuperAdmin"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            RoleName = "BranchAdmin"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            RoleName = "Employee"
+                        });
                 });
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Shipment", b =>
@@ -204,6 +221,17 @@ namespace ParcelDeliverySystem.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Email = "admin@system.com",
+                            Name = "Super Admin",
+                            Password = "$2a$12$d3dwKQXdFPkVmOzY7mQ/k.PR/h7tqhZYqdpSLrBl0ydpJXRH2FJp.",
+                            Phone = "00000000",
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Recipient", b =>
@@ -265,6 +293,26 @@ namespace ParcelDeliverySystem.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("shipment_status");
+
+                    b.HasData(
+                        new
+                        {
+                            StatusId = 1,
+                            Description = "El envío ha sido creado.",
+                            StatusName = "CREATED"
+                        },
+                        new
+                        {
+                            StatusId = 2,
+                            Description = "El envío está en camino.",
+                            StatusName = "IN_TRANSIT"
+                        },
+                        new
+                        {
+                            StatusId = 3,
+                            Description = "El envío ha sido entregado.",
+                            StatusName = "DELIVERED"
+                        });
                 });
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Package", b =>

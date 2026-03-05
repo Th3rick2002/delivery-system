@@ -21,7 +21,7 @@ public class AppDBContext : DbContext
 
         modelBuilder.HasPostgresExtension("pgcrypto");
 
-        // ---------------- ROLES ----------------
+        // ROLES 
 
         modelBuilder.Entity<Role>(entity =>
         {
@@ -32,7 +32,7 @@ public class AppDBContext : DbContext
                 .HasMaxLength(30);
         });
 
-        // ---------------- USERS ----------------
+        // USERS
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -50,7 +50,7 @@ public class AppDBContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ---------------- RECIPIENTS ----------------
+        // RECIPIENTS 
 
         modelBuilder.Entity<Recipient>(entity =>
         {
@@ -60,21 +60,21 @@ public class AppDBContext : DbContext
                 .HasDefaultValueSql("gen_random_uuid()");
         });
 
-        // ---------------- SHIPMENT STATUS ----------------
+        // SHIPMENT STATUS
 
         modelBuilder.Entity<ShipmentStatus>(entity =>
         {
             entity.HasKey(s => s.StatusId);
         });
 
-        // ---------------- BRANCHES ----------------
+        // BRANCHES
 
         modelBuilder.Entity<Branch>(entity =>
         {
             entity.HasKey(b => b.BranchId);
         });
 
-        // ---------------- SHIPMENTS ----------------
+        // SHIPMENTS
 
         modelBuilder.Entity<Shipment>(entity =>
         {
@@ -112,7 +112,7 @@ public class AppDBContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ---------------- PACKAGES ----------------
+        // PACKAGES
 
         modelBuilder.Entity<Package>(entity =>
         {
@@ -129,5 +129,30 @@ public class AppDBContext : DbContext
                 .HasForeignKey(p => p.ShipmentId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        // DATA SEEDING
+
+        modelBuilder.Entity<Role>().HasData(
+            new Role { RoleId = 1, RoleName = "SuperAdmin" },
+            new Role { RoleId = 2, RoleName = "BranchAdmin" },
+            new Role { RoleId = 3, RoleName = "Employee" }
+        );
+
+        modelBuilder.Entity<ShipmentStatus>().HasData(
+            new ShipmentStatus { StatusId = 1, StatusName = "CREATED", Description = "El envío ha sido creado." },
+            new ShipmentStatus { StatusId = 2, StatusName = "IN_TRANSIT", Description = "El envío está en camino." },
+            new ShipmentStatus { StatusId = 3, StatusName = "DELIVERED", Description = "El envío ha sido entregado." }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                UserId = new Guid("11111111-1111-1111-1111-111111111111"),
+                Name = "Super Admin",
+                Phone = "00000000",
+                Email = "admin@system.com",
+                Password = "$2a$12$d3dwKQXdFPkVmOzY7mQ/k.PR/h7tqhZYqdpSLrBl0ydpJXRH2FJp.",
+                RoleId = 1
+            }
+        );
     }
 }

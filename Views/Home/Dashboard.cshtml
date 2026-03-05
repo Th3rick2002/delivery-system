@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Dashboard - SuperAdmin";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Dashboard Administrador</h1>
+            <p class="lead">Bienvenido al panel de control de Super Administrador.</p>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 shadow">
+                <div class="card-header">Gestión de Usuarios</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Administradores de Sucursal</h5>
+                    <p class="card-text">Administra las cuentas de los encargados de cada sucursal.</p>
+                    <a asp-controller="User" asp-action="Index" class="btn btn-light">Ver Administradores</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow opacity-75">
+                <div class="card-header">Sucursales (Próximamente)</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Gestionar Sucursales</h5>
+                    <p class="card-text">Módulo para administrar las sucursales del sistema.</p>
+                    <button class="btn btn-light disabled">En desarrollo</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3 shadow opacity-75">
+                <div class="card-header">Reportes (Próximamente)</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ver Estadísticas</h5>
+                    <p class="card-text">Resumen de envíos y paquetes a nivel nacional.</p>
+                    <button class="btn btn-light disabled">En desarrollo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
