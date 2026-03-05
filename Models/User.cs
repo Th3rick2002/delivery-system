@@ -1,37 +1,38 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace ParcelDeliverySystem.Models;
 
-[Table("Customers")]
-[Index(nameof(Email), IsUnique = true)]
-public class Customer
+[Table("users")]
+public class User
 {
     [Key]
-    public Guid CustomerId { get; set; }
-    
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
     [Required]
-    [MinLength(3)]
     [MaxLength(20)]
+    [Column("name")]
     public string Name { get; set; }
 
     [Required]
-    [MinLength(8)]
     [MaxLength(20)]
+    [Column("phone")]
     public string Phone { get; set; }
-    
+
     [Required]
     [EmailAddress]
+    [Column("email")]
     public string Email { get; set; }
-    
+
     [Required]
-    [MinLength(3)]
-    [MaxLength(30)]
-    public string Address  { get; set; }
-    
-    [Required]
-    public DateTime RegistrationDate  { get; set; } =  DateTime.UtcNow;
-    
+    [Column("password")]
+    public string Password { get; set; }
+
+    [Column("role_id")]
+    public int RoleId { get; set; }
+
+    public Role Role { get; set; }
+
     public ICollection<Shipment> Shipments { get; set; }
 }

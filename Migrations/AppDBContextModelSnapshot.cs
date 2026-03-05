@@ -23,67 +23,196 @@ namespace ParcelDeliverySystem.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pgcrypto");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.Customer", b =>
+            modelBuilder.Entity("Branch", b =>
                 {
-                    b.Property<Guid>("CustomerId")
+                    b.Property<int>("BranchId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("integer")
+                        .HasColumnName("branch_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BranchId"));
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameBranch")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text")
+                        .HasColumnName("name_branch");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("PhoneBranch")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text")
+                        .HasColumnName("phone_branch");
 
-                    b.Property<DateTime>("RegistrationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.HasKey("BranchId");
 
-                    b.HasKey("CustomerId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Customers");
+                    b.ToTable("branches");
                 });
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Package", b =>
                 {
                     b.Property<Guid>("PackageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("package_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("Fragile")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Length")
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("ShipmentId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("shipment_id");
 
                     b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Width")
                         .HasColumnType("numeric");
 
                     b.HasKey("PackageId");
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("packages");
                 });
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.Recipient", b =>
+            modelBuilder.Entity("ParcelDeliverySystem.Models.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleId"));
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("role_name");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("roles");
+                });
+
+            modelBuilder.Entity("ParcelDeliverySystem.Models.Shipment", b =>
+                {
+                    b.Property<Guid>("ShipmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("shipment_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<int>("BranchFrom")
+                        .HasColumnType("integer")
+                        .HasColumnName("branch_from");
+
+                    b.Property<int>("BranchTo")
+                        .HasColumnType("integer")
+                        .HasColumnName("branch_to");
+
+                    b.Property<DateTime?>("DeliveryDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipient_id");
+
+                    b.Property<DateTime>("ShipmentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer")
+                        .HasColumnName("status_id");
+
+                    b.Property<string>("TrackingNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tracking_number");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("ShipmentId");
+
+                    b.HasIndex("BranchFrom");
+
+                    b.HasIndex("BranchTo");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("shipments");
+                });
+
+            modelBuilder.Entity("ParcelDeliverySystem.Models.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("users");
+                });
+
+            modelBuilder.Entity("Recipient", b =>
                 {
                     b.Property<Guid>("RecipientId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipient_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -112,66 +241,30 @@ namespace ParcelDeliverySystem.Migrations
 
                     b.HasKey("RecipientId");
 
-                    b.ToTable("Recipients");
+                    b.ToTable("recipients");
                 });
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.Shipment", b =>
-                {
-                    b.Property<Guid>("ShipmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DeliveryDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<Guid>("RecipientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ShipmentDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ShipmentStatusId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ShipmentId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("RecipientId");
-
-                    b.HasIndex("ShipmentStatusId");
-
-                    b.ToTable("Shipments");
-                });
-
-            modelBuilder.Entity("ParcelDeliverySystem.Models.ShipmentStatus", b =>
+            modelBuilder.Entity("ShipmentStatus", b =>
                 {
                     b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatusId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("StatusName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text")
+                        .HasColumnName("status_name");
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("ShipmentStatus");
+                    b.ToTable("shipment_status");
                 });
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Package", b =>
@@ -187,39 +280,61 @@ namespace ParcelDeliverySystem.Migrations
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Shipment", b =>
                 {
-                    b.HasOne("ParcelDeliverySystem.Models.Customer", "Customer")
-                        .WithMany("Shipments")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Branch", "OriginBranch")
+                        .WithMany()
+                        .HasForeignKey("BranchFrom")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ParcelDeliverySystem.Models.Recipient", "Recipient")
+                    b.HasOne("Branch", "DestinationBranch")
+                        .WithMany()
+                        .HasForeignKey("BranchTo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Recipient", "Recipient")
                         .WithMany("Shipments")
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ParcelDeliverySystem.Models.ShipmentStatus", "ShipmentStatus")
+                    b.HasOne("ShipmentStatus", "Status")
                         .WithMany("Shipments")
-                        .HasForeignKey("ShipmentStatusId")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ParcelDeliverySystem.Models.User", "User")
+                        .WithMany("Shipments")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("DestinationBranch");
+
+                    b.Navigation("OriginBranch");
 
                     b.Navigation("Recipient");
 
-                    b.Navigation("ShipmentStatus");
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.Customer", b =>
+            modelBuilder.Entity("ParcelDeliverySystem.Models.User", b =>
                 {
-                    b.Navigation("Shipments");
+                    b.HasOne("ParcelDeliverySystem.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.Recipient", b =>
+            modelBuilder.Entity("ParcelDeliverySystem.Models.Role", b =>
                 {
-                    b.Navigation("Shipments");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("ParcelDeliverySystem.Models.Shipment", b =>
@@ -227,7 +342,17 @@ namespace ParcelDeliverySystem.Migrations
                     b.Navigation("Packages");
                 });
 
-            modelBuilder.Entity("ParcelDeliverySystem.Models.ShipmentStatus", b =>
+            modelBuilder.Entity("ParcelDeliverySystem.Models.User", b =>
+                {
+                    b.Navigation("Shipments");
+                });
+
+            modelBuilder.Entity("Recipient", b =>
+                {
+                    b.Navigation("Shipments");
+                });
+
+            modelBuilder.Entity("ShipmentStatus", b =>
                 {
                     b.Navigation("Shipments");
                 });

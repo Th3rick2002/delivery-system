@@ -3,17 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ParcelDeliverySystem.Models;
 
-[Table("Packages")]
+[Table("packages")]
 public class Package
 {
     [Key]
+    [Column("package_id")]
     public Guid PackageId { get; set; }
-    
-    [Required]
+
+    [Column("shipment_id")]
     public Guid ShipmentId { get; set; }
-    [ForeignKey("ShipmentId")]
+
     public Shipment Shipment { get; set; }
-    
-    [Required]
+
+    public decimal Height { get; set; }
+
+    public decimal Width { get; set; }
+
+    public decimal Length { get; set; }
+
     public decimal Weight { get; set; }
+
+    public bool Fragile { get; set; }
 }
